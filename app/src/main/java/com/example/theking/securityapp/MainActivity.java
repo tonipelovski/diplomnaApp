@@ -3,6 +3,7 @@ package com.example.theking.securityapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
@@ -14,5 +15,10 @@ public class MainActivity extends AppCompatActivity {
 
         Intent gpsActivity = new Intent(MainActivity.this, GPSActivity.class);
         MainActivity.this.startActivity(gpsActivity);
+    }
+
+    private String getSpecialCode(){
+        SharedPreferences settings = getApplicationContext().getSharedPreferences("specialCode", 0);
+        return settings.getString("code", "No name defined");
     }
 }
