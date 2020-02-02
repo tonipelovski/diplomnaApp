@@ -14,14 +14,24 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
-public class InformationActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.Arrays;
 
+public class InformationActivity extends AppCompatActivity {
+    private EndlessRecyclerViewScrollListener scrollListener;
+    private RecyclerView rvItems;
+    private InformationAdapter adapter;
+    private ArrayList<String> dates;
+    private int counter = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,18 +48,63 @@ public class InformationActivity extends AppCompatActivity {
             }
         });
 
+        dates = new ArrayList<>();
+        dates.add("default");
+
+        rvItems = (RecyclerView) findViewById(R.id.rvItems);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        rvItems.setLayoutManager(linearLayoutManager);
+
+        adapter = new InformationAdapter(this, dates);
+        rvItems.setAdapter(adapter);
+
+        // Retain an instance so that you can call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi(counter);
+                counter++;
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvItems.addOnScrollListener(scrollListener);
+
+    }
+
+    private String getUsername(){
+        SharedPreferences settings = getApplicationContext().getSharedPreferences("userName", 0);
+        return settings.getString("name", "No name defined");
+    }
+
+
+
+    // Append the next page of data into the adapter
+    // This method probably sends out a network request and appends new data items to your adapter.
+    public void loadNextDataFromApi(int offset) {
+        // Send an API request to retrieve appropriate paginated data
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        //  --> Deserialize and construct new model objects from the API response
+        //  --> Append the new data objects to the existing set of items inside the array of items
+        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
         String username = getUsername();
         if (username == null || username.equals("")){
             //error
         }else {
             RequestQueue queue = Volley.newRequestQueue(this);
-            String url = "http://192.168.0.102/Diplomna_Software/server/devices.php?apicall=1&username=" + username;
+            String url = "http://192.168.0.102/Diplomna_Software/server/devices.php?apicall=1&username=" + username + "&item=" + offset*10;
 
             // Request a string response from the provided URL.
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
+                            // Configure the RecyclerView
+                            Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                            String[] splited = response.split("\\s+");
+                            dates.addAll(Arrays.asList(splited));
+                            adapter.notifyDataSetChanged();
 
                         }
                     }, new Response.ErrorListener() {
@@ -61,10 +116,5 @@ public class InformationActivity extends AppCompatActivity {
             // Add the request to the RequestQueue.
             queue.add(stringRequest);
         }
-    }
-
-    private String getUsername(){
-        SharedPreferences settings = getApplicationContext().getSharedPreferences("username", 0);
-        return settings.getString("name", "No name defined");
     }
 }

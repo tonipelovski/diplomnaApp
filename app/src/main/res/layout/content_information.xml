@@ -8,4 +8,9 @@
     tools:context=".InformationActivity"
     tools:showIn="@layout/activity_information">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvItems"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
