@@ -1,5 +1,6 @@
 package com.example.theking.securityapp;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.android.volley.Request;
@@ -14,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.preference.PreferenceManager;
 import android.view.View;
 
 import org.json.JSONObject;
@@ -36,25 +38,33 @@ public class InformationActivity extends AppCompatActivity {
             }
         });
 
+        String username = getUsername();
+        if (username == null || username.equals("")){
+            //error
+        }else {
+            RequestQueue queue = Volley.newRequestQueue(this);
+            String url = "http://192.168.0.102/Diplomna_Software/server/devices.php?apicall=1&username=" + username;
 
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://localhost/Diplomna_Software/server/";
+            // Request a string response from the provided URL.
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
 
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                }
+            });
 
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        });
-
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
+            // Add the request to the RequestQueue.
+            queue.add(stringRequest);
+        }
     }
 
+    private String getUsername(){
+        SharedPreferences settings = getApplicationContext().getSharedPreferences("username", 0);
+        return settings.getString("name", "No name defined");
+    }
 }
