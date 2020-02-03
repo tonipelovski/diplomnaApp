@@ -14,6 +14,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toast.makeText(getApplicationContext(), getUsername(), Toast.LENGTH_LONG).show();
+
+
+        startService(new Intent(this, NotifyService.class));
+
         if(getUsername().equals("No name defined")){
             Intent loginActivity = new Intent(MainActivity.this, LoginActivity.class);
             MainActivity.this.startActivity(loginActivity);

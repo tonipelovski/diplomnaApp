@@ -21,6 +21,9 @@
             android:name=".InformationActivity"
             android:label="@string/title_activity_information"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <service
+            android:name=".NotifyService"
+            android:exported="false"/>
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity" />
         <!--

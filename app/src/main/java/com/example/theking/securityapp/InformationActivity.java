@@ -93,7 +93,7 @@ public class InformationActivity extends AppCompatActivity {
             //error
         }else {
             RequestQueue queue = Volley.newRequestQueue(this);
-            String url = "http://192.168.0.102/Diplomna_Software/server/devices.php?apicall=1&username=" + username + "&item=" + offset*10;
+            String url = "http://192.168.0.102/Diplomna_Software/server/devices.php?apicall=1&username=" + username + "&page=" + offset*10;
 
             // Request a string response from the provided URL.
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -102,9 +102,11 @@ public class InformationActivity extends AppCompatActivity {
                         public void onResponse(String response) {
                             // Configure the RecyclerView
                             Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
-                            String[] splited = response.split("\\s+");
-                            dates.addAll(Arrays.asList(splited));
-                            adapter.notifyDataSetChanged();
+                            if(!response.isEmpty()) {
+                                String[] splited = response.split("\\s+");
+                                dates.addAll(Arrays.asList(splited));
+                                adapter.notifyDataSetChanged();
+                            }
 
                         }
                     }, new Response.ErrorListener() {
