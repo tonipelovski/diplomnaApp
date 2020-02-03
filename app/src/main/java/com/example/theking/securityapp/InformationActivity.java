@@ -1,5 +1,6 @@
 package com.example.theking.securityapp;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -14,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,12 +28,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class InformationActivity extends AppCompatActivity {
+public class InformationActivity extends AppCompatActivity implements InformationAdapter.ItemClickListener {
     private EndlessRecyclerViewScrollListener scrollListener;
     private RecyclerView rvItems;
     private InformationAdapter adapter;
     private ArrayList<String> dates;
     private int counter = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +49,15 @@ public class InformationActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         rvItems.setLayoutManager(linearLayoutManager);
 
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvItems.getContext(),
+                linearLayoutManager.getOrientation());
+        rvItems.addItemDecoration(dividerItemDecoration);
+
         adapter = new InformationAdapter(this, dates);
+        adapter.setClickListener(this);
         rvItems.setAdapter(adapter);
+
+
 
         // Retain an instance so that you can call `resetState()` for fresh searches
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
@@ -109,5 +119,21 @@ public class InformationActivity extends AppCompatActivity {
             // Add the request to the RequestQueue.
             queue.add(stringRequest);
         }
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+        Intent gpsActivity = new Intent(InformationActivity.this, GPSActivity.class);
+        gpsActivity.putExtra("latitude", 0);
+        gpsActivity.putExtra("longitute", 0);
+        gpsActivity.putExtra("IMU", 0);
+        gpsActivity.putExtra("shock", 0);
+        InformationActivity.this.startActivity(gpsActivity);
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 }
