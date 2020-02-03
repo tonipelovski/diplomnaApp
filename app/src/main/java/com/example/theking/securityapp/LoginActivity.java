@@ -58,8 +58,8 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.println(Log.VERBOSE, "", response + "/");
                                 if(response.contains("OK")){
                                     saveUserNameOnDevice(emailValue);
-                                    Intent infoActivity = new Intent(LoginActivity.this, InformationActivity.class);
-                                    LoginActivity.this.startActivity(infoActivity);
+                                    Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
+                                    LoginActivity.this.startActivity(mainActivity);
                                 }
 
                             }

@@ -41,6 +41,11 @@ public class NotifyService extends IntentService {
         // notificationId is a unique int for each notification that you must define
         while (true){
             loadNextDataFromApi(0);
+            try {
+                Thread.sleep(100000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
     }
