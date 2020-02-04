@@ -14,11 +14,21 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
     private List<String> data;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private List<String> latitude;
+    private List<String> longitude;
+    private List<String> IMU;
+    private List<String> shock;
+    private List<String> date;
 
     // data is passed into the constructor
-    InformationAdapter(Context context, List<String> data) {
+    InformationAdapter(Context context, List<String> id, List<String> latitude, List<String> longitude, List<String> IMU, List<String> shock, List<String> date) {
         this.mInflater = LayoutInflater.from(context);
-        this.data = data;
+        this.data = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.IMU = IMU;
+        this.shock = shock;
+        this.date = date;
     }
 
     // inflates the row layout from xml when needed
@@ -48,7 +58,7 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.tvAnimalName);
+            myTextView = itemView.findViewById(R.id.moduleId);
             itemView.setOnClickListener(this);
         }
 

@@ -10,8 +10,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,11 +17,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Toast;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +27,13 @@ public class InformationActivity extends AppCompatActivity implements Informatio
     private EndlessRecyclerViewScrollListener scrollListener;
     private RecyclerView rvItems;
     private InformationAdapter adapter;
-    private ArrayList<String> dates;
+    private ArrayList<String> ids;
+    private ArrayList<String> latitude;
+    private ArrayList<String> longitude;
+    private ArrayList<String> IMU;
+    private ArrayList<String> shock;
+    private ArrayList<String> date;
+
     private int counter = 0;
 
     @Override
@@ -42,8 +43,15 @@ public class InformationActivity extends AppCompatActivity implements Informatio
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        dates = new ArrayList<>();
-        dates.add("default");
+        ids = new ArrayList<>();
+        latitude = new ArrayList<>();
+        longitude = new ArrayList<>();
+        IMU = new ArrayList<>();
+        shock = new ArrayList<>();
+        date = new ArrayList<>();
+        loadNextDataFromApi(counter);
+        counter++;
+
 
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -53,7 +61,7 @@ public class InformationActivity extends AppCompatActivity implements Informatio
                 linearLayoutManager.getOrientation());
         rvItems.addItemDecoration(dividerItemDecoration);
 
-        adapter = new InformationAdapter(this, dates);
+        adapter = new InformationAdapter(this, ids, latitude, longitude, IMU, shock, date);
         adapter.setClickListener(this);
         rvItems.setAdapter(adapter);
 
@@ -105,7 +113,7 @@ public class InformationActivity extends AppCompatActivity implements Informatio
                             Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
                             if(!response.isEmpty()) {
                                 String[] splited = response.split("\\s+");
-                                dates.addAll(Arrays.asList(splited));
+                                ids.addAll(Arrays.asList(splited));
                                 adapter.notifyDataSetChanged();
                             }
 
