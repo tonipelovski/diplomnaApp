@@ -33,6 +33,7 @@ public class InformationActivity extends AppCompatActivity implements Informatio
     private ArrayList<String> IMU;
     private ArrayList<String> shock;
     private ArrayList<String> date;
+    private ArrayList<String> rfid;
 
     private int counter = 0;
 
@@ -49,6 +50,7 @@ public class InformationActivity extends AppCompatActivity implements Informatio
         IMU = new ArrayList<>();
         shock = new ArrayList<>();
         date = new ArrayList<>();
+        rfid = new ArrayList<>();
         loadNextDataFromApi(counter);
         counter++;
 
@@ -61,7 +63,7 @@ public class InformationActivity extends AppCompatActivity implements Informatio
                 linearLayoutManager.getOrientation());
         rvItems.addItemDecoration(dividerItemDecoration);
 
-        adapter = new InformationAdapter(this, ids, latitude, longitude, IMU, shock, date);
+        adapter = new InformationAdapter(this, ids, latitude, longitude, IMU, shock, date, rfid);
         adapter.setClickListener(this);
         rvItems.setAdapter(adapter);
 
@@ -102,7 +104,7 @@ public class InformationActivity extends AppCompatActivity implements Informatio
             //error
         }else {
             RequestQueue queue = Volley.newRequestQueue(this);
-            String url = "http://192.168.0.102/Diplomna_Software/server/devices.php?apicall=1&username=" + username + "&page=" + offset*10;
+            String url = "http://78.130.176.59/server/devices.php?apicall=1&username=" + username + "&page=" + offset*10;
 
             // Request a string response from the provided URL.
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -112,8 +114,25 @@ public class InformationActivity extends AppCompatActivity implements Informatio
                             // Configure the RecyclerView
                             Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
                             if(!response.isEmpty()) {
-                                String[] splited = response.split("\\s+");
-                                ids.addAll(Arrays.asList(splited));
+                                String[] splitedModules = response.split("/");
+                                ArrayList<String> data = new ArrayList<>(Arrays.asList(splitedModules));
+
+                                for(int i = 0; i < splitedModules.length; i++){
+                                    Toast.makeText(getApplicationContext(), splitedModules[i], Toast.LENGTH_LONG).show();
+
+                                    String[] splitedModuleData = splitedModules[i].split(";");
+
+                                    //Toast.makeText(getApplicationContext(), splitedModuleData[1], Toast.LENGTH_LONG).show();
+                                    ids.addAll(Arrays.asList(splitedModuleData[0]));
+                                    date.addAll(Arrays.asList(splitedModuleData[1]));
+                                    latitude.addAll(Arrays.asList(splitedModuleData[2]));
+                                    longitude.addAll(Arrays.asList(splitedModuleData[3]));
+                                    IMU.addAll(Arrays.asList(splitedModuleData[4]));
+                                    shock.addAll(Arrays.asList(splitedModuleData[5]));
+                                    rfid.addAll(Arrays.asList(splitedModuleData[6]));
+
+                                }
+
                                 adapter.notifyDataSetChanged();
                             }
 
@@ -133,10 +152,7 @@ public class InformationActivity extends AppCompatActivity implements Informatio
     public void onItemClick(View view, int position) {
         Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
         Intent gpsActivity = new Intent(InformationActivity.this, GPSActivity.class);
-        gpsActivity.putExtra("latitude", 0);
-        gpsActivity.putExtra("longitute", 0);
-        gpsActivity.putExtra("IMU", 0);
-        gpsActivity.putExtra("shock", 0);
+        gpsActivity.putStringArrayListExtra("info", (ArrayList<String>) adapter.getItem(position));
         InformationActivity.this.startActivity(gpsActivity);
     }
 

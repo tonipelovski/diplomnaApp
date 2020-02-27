@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.ViewHolder> {
@@ -19,9 +20,11 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
     private List<String> IMU;
     private List<String> shock;
     private List<String> date;
+    private List<String> rfid;
 
     // data is passed into the constructor
-    InformationAdapter(Context context, List<String> id, List<String> latitude, List<String> longitude, List<String> IMU, List<String> shock, List<String> date) {
+    InformationAdapter(Context context, List<String> id, List<String> latitude, List<String> longitude,
+                       List<String> IMU, List<String> shock, List<String> date, List<String> rfid) {
         this.mInflater = LayoutInflater.from(context);
         this.data = id;
         this.latitude = latitude;
@@ -29,7 +32,10 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
         this.IMU = IMU;
         this.shock = shock;
         this.date = date;
+        this.rfid = rfid;
     }
+
+
 
     // inflates the row layout from xml when needed
     @Override
@@ -69,8 +75,16 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
     }
 
     // convenience method for getting data at click position
-    String getItem(int id) {
-        return data.get(id);
+    ArrayList<String> getItem(int id) {
+        ArrayList<String> information = new ArrayList<>();
+        information.add(data.get(id));
+        information.add(date.get(id));
+        information.add(latitude.get(id));
+        information.add(longitude.get(id));
+        information.add(IMU.get(id));
+        information.add(shock.get(id));
+        information.add(rfid.get(id));
+        return information;
     }
 
     // allows clicks events to be caught

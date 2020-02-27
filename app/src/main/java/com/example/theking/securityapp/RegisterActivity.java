@@ -51,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                String url =" http://192.168.0.102/Diplomna_Software/server/register.php?apicall=1&username="+ emailValue+ "&password="+ passwordValue + "&conf_password=" + passwordConfirmationValue;
+                String url =" http://78.130.176.59/server/register.php?apicall=1&username="+ emailValue+ "&password="+ passwordValue + "&conf_password=" + passwordConfirmationValue;
 
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,

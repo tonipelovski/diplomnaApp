@@ -42,7 +42,7 @@ public class NotifyService extends IntentService {
         while (true){
             loadNextDataFromApi(0);
             try {
-                Thread.sleep(100000);
+                Thread.sleep(1000000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -63,7 +63,7 @@ public class NotifyService extends IntentService {
             //error
         }else {
             RequestQueue queue = Volley.newRequestQueue(this);
-            String url = "http://192.168.0.102/Diplomna_Software/server/devices.php?apicall=1&username=" + username + "&page=" + offset*10;
+            String url = "http://78.130.176.59/server/devices.php?apicall=1&username=" + username + "&page=" + offset*10;
 
             // Request a string response from the provided URL.
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -73,9 +73,17 @@ public class NotifyService extends IntentService {
                             // Configure the RecyclerView
                             Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
                             if(!response.isEmpty()) {
-                                String[] splited = response.split("\\s+");
-                                ArrayList<String> data = new ArrayList<>();
-                                data.addAll(Arrays.asList(splited));
+                                String[] splitedModules = response.split("/");
+
+                                for(int i = 0; i < 1; i++){
+                                    String[] splitedModuleData = splitedModules[i].split(";");
+                                    String id = splitedModuleData[0];
+                                    if(Integer.parseInt(splitedModuleData[4]) == 1)notificationManager.notify(1, builder.build());
+                                    if(Integer.parseInt(splitedModuleData[5]) == 1)notificationManager.notify(1, builder.build());
+                                    if(Integer.parseInt(splitedModuleData[6]) == 1)notificationManager.notify(1, builder.build());
+
+                                }
+
                                 //check the data for errors
                                 // if errors then notify
                                 //notificationManager.notify(1, builder.build());

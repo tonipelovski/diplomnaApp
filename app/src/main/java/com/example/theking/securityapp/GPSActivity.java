@@ -2,6 +2,7 @@ package com.example.theking.securityapp;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -15,20 +16,25 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
+
 public class GPSActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private ArrayList<String> info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gps);
+        info = getIntent().getStringArrayListExtra("info");
+
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "id: " + info.get(0) + "imu: " + info.get(4) + "shock: " + info.get(5), Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -52,10 +58,9 @@ public class GPSActivity extends FragmentActivity implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         // Add a marker in Sydney and move the camera
-        LatLng coordinates = new LatLng(42.645827, 23.277480);
-        mMap.addMarker(new MarkerOptions().position(coordinates).title("Marker in Sydney"));
+        LatLng coordinates = new LatLng(Double.parseDouble(info.get(2)), Double.parseDouble(info.get(3)));
+        mMap.addMarker(new MarkerOptions().position(coordinates).title("Marker"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(coordinates));
     }
 }

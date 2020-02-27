@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 passwordValue = encrypt(passwordValue, "2a925de8ca0248d7");
                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                String url =" http://192.168.0.102/Diplomna_Software/server/login.php?apicall=1&username="+ emailValue+ "&password="+ passwordValue;
+                String url =" http://78.130.176.59/server/login.php?apicall=1&username="+ emailValue+ "&password="+ passwordValue;
 
                 // Request a string response from the provided URL.
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
