@@ -1,11 +1,15 @@
 package com.example.theking.securityapp;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -21,34 +25,64 @@ import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Locale;
 
-public class NotifyService extends IntentService {
-    public NotifyService() {
-        super("notify");
-    }
+public class NotifyService extends Service {
     private NotificationCompat.Builder builder;
     private NotificationManagerCompat notificationManager;
+
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    public void onCreate() {
+        super.onCreate();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId){
+
         createNotificationChannel();
         builder = new NotificationCompat.Builder(this, "1")
                 .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
                 .setContentTitle("notification")
                 .setContentText("paqka ti vdig kolata")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
 
         notificationManager = NotificationManagerCompat.from(this);
         // notificationId is a unique int for each notification that you must define
-        while (true){
-            loadNextDataFromApi(0);
-            try {
-                Thread.sleep(1000000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+        new Thread()
+        {
+            public void run() {
+                while(true) {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    loadNextDataFromApi(0);
+                }
             }
-        }
+        }.start();
+
+
+        startForeground(1, builder.build());
+        return START_STICKY;
 
     }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
 
     // Append the next page of data into the adapter
     // This method probably sends out a network request and appends new data items to your adapter.
@@ -71,6 +105,8 @@ public class NotifyService extends IntentService {
                         @Override
                         public void onResponse(String response) {
                             // Configure the RecyclerView
+                            //Toast.makeText(getApplicationContext(), (int) System.currentTimeMillis(), Toast.LENGTH_LONG).show();
+
                             Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
                             if(!response.isEmpty()) {
                                 String[] splitedModules = response.split("/");
@@ -122,5 +158,6 @@ public class NotifyService extends IntentService {
         SharedPreferences settings = getApplicationContext().getSharedPreferences("userName", 0);
         return settings.getString("name", "No name defined");
     }
-
 }
+
+
