@@ -28,11 +28,7 @@
             android:name=".NotifyService"
             android:exported="true"
             android:enabled="true"
-            android:process=":process"
             />
-        <receiver android:name=".AlarmReciever"
-            android:enabled="true"
-            android:exported="true" />
 
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity" />

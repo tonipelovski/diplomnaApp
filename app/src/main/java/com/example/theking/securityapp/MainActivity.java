@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        stopService(new Intent(this, NotifyService.class));
         Toast.makeText(getApplicationContext(), getUsername(), Toast.LENGTH_LONG).show();
         currentStateButton = findViewById(R.id.currentStateButton);
         logInfoButton = findViewById(R.id.infoLogButton);

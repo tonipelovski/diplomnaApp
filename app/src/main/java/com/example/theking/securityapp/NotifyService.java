@@ -32,6 +32,8 @@ public class NotifyService extends Service {
     private NotificationCompat.Builder builder;
     private NotificationManagerCompat notificationManager;
 
+    Thread thread;
+    int stopThread = 0;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -40,6 +42,9 @@ public class NotifyService extends Service {
 
     @Override
     public void onDestroy() {
+        stopThread = 1;
+        thread.interrupt();
+        Toast.makeText(getApplicationContext(), "thread killed", Toast.LENGTH_LONG).show();
         super.onDestroy();
     }
 
@@ -57,10 +62,12 @@ public class NotifyService extends Service {
         notificationManager = NotificationManagerCompat.from(this);
         // notificationId is a unique int for each notification that you must define
 
-        new Thread()
+        thread = new Thread()
         {
             public void run() {
-                while(true) {
+
+                while(stopThread == 0) {
+
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
@@ -69,8 +76,9 @@ public class NotifyService extends Service {
                     loadNextDataFromApi(0);
                 }
             }
-        }.start();
-
+        };
+        thread.start();
+        Toast.makeText(getApplicationContext(), "thread started" + thread.getClass(), Toast.LENGTH_LONG).show();
 
         startForeground(1, builder.build());
         return START_STICKY;
@@ -107,16 +115,17 @@ public class NotifyService extends Service {
                             // Configure the RecyclerView
                             //Toast.makeText(getApplicationContext(), (int) System.currentTimeMillis(), Toast.LENGTH_LONG).show();
 
-                            Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
                             if(!response.isEmpty()) {
                                 String[] splitedModules = response.split("/");
 
                                 for(int i = 0; i < 1; i++){
                                     String[] splitedModuleData = splitedModules[i].split(";");
                                     String id = splitedModuleData[0];
-                                    if(Integer.parseInt(splitedModuleData[4]) == 1)notificationManager.notify(1, builder.build());
-                                    if(Integer.parseInt(splitedModuleData[5]) == 1)notificationManager.notify(1, builder.build());
-                                    if(Integer.parseInt(splitedModuleData[6]) == 1)notificationManager.notify(1, builder.build());
+
+                                    if(!splitedModuleData[4].equals("0"))notificationManager.notify(1, builder.build());
+                                    if(!splitedModuleData[5].equals("0"))notificationManager.notify(1, builder.build());
+                                    if(!splitedModuleData[6].equals("0"))notificationManager.notify(1, builder.build());
 
                                 }
 
