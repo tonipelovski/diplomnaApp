@@ -69,7 +69,7 @@ public class NotifyService extends Service {
                 while(stopThread == 0) {
 
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(100000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

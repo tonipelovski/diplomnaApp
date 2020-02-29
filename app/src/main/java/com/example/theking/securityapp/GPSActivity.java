@@ -34,7 +34,7 @@ public class GPSActivity extends FragmentActivity implements OnMapReadyCallback 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "id: " + info.get(0) + "imu: " + info.get(4) + "shock: " + info.get(5), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, "id: " + info.get(0) + " imu: " + info.get(4) + " shock: " + info.get(5), Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -59,8 +59,10 @@ public class GPSActivity extends FragmentActivity implements OnMapReadyCallback 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         // Add a marker in Sydney and move the camera
-        LatLng coordinates = new LatLng(Double.parseDouble(info.get(2)), Double.parseDouble(info.get(3)));
-        mMap.addMarker(new MarkerOptions().position(coordinates).title("Marker"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(coordinates));
+        if (!info.get(2).equals("") && !info.get(3).equals("")) {
+            LatLng coordinates = new LatLng(Double.parseDouble(info.get(2)), Double.parseDouble(info.get(3)));
+            mMap.addMarker(new MarkerOptions().position(coordinates).title("Marker"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(coordinates));
+        }
     }
 }

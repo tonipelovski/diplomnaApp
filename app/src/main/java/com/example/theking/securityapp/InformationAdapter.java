@@ -47,8 +47,8 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String date = data.get(position);
-        holder.myTextView.setText(date);
+        String id = "id: " + data.get(position) + " date: " + date.get(position);
+        holder.myTextView.setText(id);
     }
 
     // total number of rows
