@@ -16,8 +16,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private Button currentStateButton;
@@ -111,16 +116,42 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), splitedModules[i], Toast.LENGTH_LONG).show();
 
                                     String[] splitedModuleData = splitedModules[i].split(";");
+                                    DateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+                                    Date currentDate = null;
+                                    try {
+                                        currentDate = df.parse(splitedModuleData[1]);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
 
-                                    //Toast.makeText(getApplicationContext(), splitedModuleData[1], Toast.LENGTH_LONG).show();
-                                    ids.addAll(Arrays.asList(splitedModuleData[0]));
-                                    date.addAll(Arrays.asList(splitedModuleData[1]));
-                                    latitude.addAll(Arrays.asList(splitedModuleData[2]));
-                                    longitude.addAll(Arrays.asList(splitedModuleData[3]));
-                                    IMU.addAll(Arrays.asList(splitedModuleData[4]));
-                                    shock.addAll(Arrays.asList(splitedModuleData[5]));
-                                    rfid.addAll(Arrays.asList(splitedModuleData[6]));
+                                    Date previousDate = null;
+                                    if(!date.isEmpty()){
+                                        try {
+                                            previousDate = df.parse(date.get(date.size()-1));
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                        assert currentDate != null;
+                                        if(currentDate.compareTo(previousDate) > 0){
+                                            ids.set(0,splitedModuleData[0]);
+                                            date.set(0,splitedModuleData[1]);
+                                            latitude.set(0,splitedModuleData[2]);
+                                            longitude.set(0,splitedModuleData[3]);
+                                            IMU.set(0,splitedModuleData[4]);
+                                            shock.set(0,splitedModuleData[5]);
+                                            rfid.set(0,splitedModuleData[6]);
+                                        }
 
+                                    }else {
+                                        //Toast.makeText(getApplicationContext(), splitedModuleData[1], Toast.LENGTH_LONG).show();
+                                        ids.add(splitedModuleData[0]);
+                                        date.add(splitedModuleData[1]);
+                                        latitude.add(splitedModuleData[2]);
+                                        longitude.add(splitedModuleData[3]);
+                                        IMU.add(splitedModuleData[4]);
+                                        shock.add(splitedModuleData[5]);
+                                        rfid.add(splitedModuleData[6]);
+                                    }
                                 }
                                 ArrayList<String> information = new ArrayList<>();
                                 information.add(ids.get(0));

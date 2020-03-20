@@ -119,9 +119,8 @@ public class NotifyService extends Service {
                             if(!response.isEmpty()) {
                                 String[] splitedModules = response.split("/");
 
-                                for(int i = 0; i < 1; i++){
+                                for(int i = 0; i < splitedModules.length; i+=10){
                                     String[] splitedModuleData = splitedModules[i].split(";");
-                                    String id = splitedModuleData[0];
 
                                     if(!splitedModuleData[4].equals("0"))notificationManager.notify(1, builder.build());
                                     if(!splitedModuleData[5].equals("0"))notificationManager.notify(1, builder.build());
