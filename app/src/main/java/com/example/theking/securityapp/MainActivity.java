@@ -27,6 +27,7 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
     private Button currentStateButton;
     private Button logInfoButton;
+    private Button manualControl;
 
     private ArrayList<String> ids;
     private ArrayList<String> latitude;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), getUsername(), Toast.LENGTH_LONG).show();
         currentStateButton = findViewById(R.id.currentStateButton);
         logInfoButton = findViewById(R.id.infoLogButton);
+        manualControl = findViewById(R.id.manualControlButton);
 
         ids = new ArrayList<>();
         latitude = new ArrayList<>();
@@ -73,6 +75,14 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent informationActivity = new Intent(MainActivity.this, InformationActivity.class);
                     MainActivity.this.startActivity(informationActivity);
+                }
+            });
+
+            manualControl.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent manualActivity = new Intent(MainActivity.this, ManualControl.class);
+                    MainActivity.this.startActivity(manualActivity);
                 }
             });
 

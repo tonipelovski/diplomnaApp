@@ -78,7 +78,6 @@ public class NotifyService extends Service {
             }
         };
         thread.start();
-        Toast.makeText(getApplicationContext(), "thread started" + thread.getClass(), Toast.LENGTH_LONG).show();
 
         startForeground(1, builder.build());
         return START_STICKY;
@@ -121,11 +120,16 @@ public class NotifyService extends Service {
 
                                 for(int i = 0; i < splitedModules.length; i+=10){
                                     String[] splitedModuleData = splitedModules[i].split(";");
+                                    Toast.makeText(getApplicationContext(), splitedModuleData[0] + getModuleAlarmStatus(splitedModuleData[0]), Toast.LENGTH_LONG).show();
 
-                                    if(!splitedModuleData[4].equals("0"))notificationManager.notify(1, builder.build());
-                                    if(!splitedModuleData[5].equals("0"))notificationManager.notify(1, builder.build());
-                                    if(!splitedModuleData[6].equals("0"))notificationManager.notify(1, builder.build());
-
+                                    if(getModuleAlarmStatus(splitedModuleData[0]).equals("ON")) {
+                                        if (!splitedModuleData[4].equals("0"))
+                                            notificationManager.notify(1, builder.build());
+                                        if (!splitedModuleData[5].equals("0"))
+                                            notificationManager.notify(1, builder.build());
+                                        if (!splitedModuleData[6].equals("0"))
+                                            notificationManager.notify(1, builder.build());
+                                    }
                                 }
 
                                 //check the data for errors
@@ -165,6 +169,11 @@ public class NotifyService extends Service {
     private String getUsername(){
         SharedPreferences settings = getApplicationContext().getSharedPreferences("userName", 0);
         return settings.getString("name", "No name defined");
+    }
+
+    private String getModuleAlarmStatus(String id){
+        SharedPreferences settings = getApplicationContext().getSharedPreferences("modules", 0);
+        return settings.getString(id, "No id defined");
     }
 }
 
