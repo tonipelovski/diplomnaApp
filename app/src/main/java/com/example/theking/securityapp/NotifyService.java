@@ -56,7 +56,7 @@ public class NotifyService extends Service {
                 .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
                 .setContentTitle("notification")
                 .setContentText("paqka ti vdig kolata")
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
 
         notificationManager = NotificationManagerCompat.from(this);
@@ -69,7 +69,7 @@ public class NotifyService extends Service {
                 while(stopThread == 0) {
 
                     try {
-                        Thread.sleep(100000);
+                        Thread.sleep(10000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -79,7 +79,6 @@ public class NotifyService extends Service {
         };
         thread.start();
 
-        startForeground(1, builder.build());
         return START_STICKY;
 
     }
@@ -124,10 +123,13 @@ public class NotifyService extends Service {
 
                                     if(getModuleAlarmStatus(splitedModuleData[0]).equals("ON")) {
                                         if (!splitedModuleData[4].equals("0"))
+                                            startForeground(1, builder.build());
                                             notificationManager.notify(1, builder.build());
                                         if (!splitedModuleData[5].equals("0"))
+                                            startForeground(1, builder.build());
                                             notificationManager.notify(1, builder.build());
                                         if (!splitedModuleData[6].equals("0"))
+                                            startForeground(1, builder.build());
                                             notificationManager.notify(1, builder.build());
                                     }
                                 }

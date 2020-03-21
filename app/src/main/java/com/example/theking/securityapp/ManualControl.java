@@ -19,21 +19,19 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ManualControl extends AppCompatActivity {
     private ArrayAdapter adapter;
     private ArrayList<String> ids = new ArrayList<>();
+    private ArrayList<String> idStatus = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_control);
         loadNextDataFromApi(0);
-        for(String id : ids){
-            if (getModuleAlarmStatus(id).equals("No id defined")) {
-                updateAlarmModule(id, "ON");
-            }
-        }
-        adapter = new ArrayAdapter<String>(this,R.layout.listview,ids);
+
+        adapter = new ArrayAdapter<String>(this, R.layout.listview, ids);
 
 
         ListView listView = (ListView) findViewById(R.id.modules_list);
@@ -42,11 +40,17 @@ public class ManualControl extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (getModuleAlarmStatus(ids.get(position)).equals("ON")) {
-                    updateAlarmModule(ids.get(position), "OFF");
+                Toast.makeText(getApplicationContext(), ids.get(position).substring(0,5), Toast.LENGTH_LONG).show();
+
+                if (getModuleAlarmStatus(ids.get(position).substring(6)).equals("ON")) {
+
+                    ids.set(position, ids.get(position).substring(0,5) + ":" + "OFF");
+                    updateAlarmModule(ids.get(position).substring(0,5), "OFF");
                 } else{
-                    updateAlarmModule(ids.get(position), "ON");
+                    ids.set(position, ids.get(position).substring(0,5) + ":" + "ON");
+                    updateAlarmModule(ids.get(position).substring(0,5), "ON");
                 }
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -98,6 +102,16 @@ public class ManualControl extends AppCompatActivity {
                                 for(int i = 0; i < splitedModules.length; i+=10){
                                     String[] splitedModuleData = splitedModules[i].split(";");
                                     ids.add(splitedModuleData[0]);
+                                    for(String id : ids){
+                                        Toast.makeText(getApplicationContext(), getModuleAlarmStatus(id), Toast.LENGTH_LONG).show();
+
+                                        if (getModuleAlarmStatus(id).equals("No id defined") || getModuleAlarmStatus(id).equals("ON")) {
+                                            updateAlarmModule(id, "ON");
+                                            ids.set(ids.indexOf(id), id + ":" + "ON");
+                                        }else{
+                                            ids.set(ids.indexOf(id), id + ":" + "OFF");
+                                        }
+                                    }
                                     adapter.notifyDataSetChanged();
                                 }
 
