@@ -92,7 +92,7 @@ public class InformationAdapter extends RecyclerView.Adapter<InformationAdapter.
         this.mClickListener = itemClickListener;
     }
 
-    // parent activity will implement this method to respond to click events
+    // parent activity implements this method to respond to click events
     public interface ItemClickListener {
         void onItemClick(View view, int position);
     }

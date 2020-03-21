@@ -88,8 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
-        //Intent gpsActivity = new Intent(MainActivity.this, GPSActivity.class);
-        //MainActivity.this.startActivity(gpsActivity);
+
     }
 
     private String getUsername(){
@@ -97,14 +96,12 @@ public class MainActivity extends AppCompatActivity {
         return settings.getString("name", "No name defined");
     }
 
-    // Append the next page of data into the adapter
-    // This method probably sends out a network request and appends new data items to your adapter.
+    // Get the first page of data
     public void loadCurrentState(int offset) {
         // Send an API request to retrieve appropriate paginated data
         //  --> Send the request including an offset value (i.e `page`) as a query parameter.
         //  --> Deserialize and construct new model objects from the API response
-        //  --> Append the new data objects to the existing set of items inside the array of items
-        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
+        //  --> Load new activity with the first data from the page
         String username = getUsername();
         if (username == null || username.equals("")){
             //error
@@ -153,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
                                         }
 
                                     }else {
-                                        //Toast.makeText(getApplicationContext(), splitedModuleData[1], Toast.LENGTH_LONG).show();
                                         ids.add(splitedModuleData[0]);
                                         date.add(splitedModuleData[1]);
                                         latitude.add(splitedModuleData[2]);

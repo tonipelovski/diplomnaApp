@@ -75,7 +75,8 @@ public class RegisterActivity extends AppCompatActivity {
                 });
 
                 // Add the request to the RequestQueue.
-                queue.add(stringRequest);            }
+                queue.add(stringRequest);
+            }
         });
 
 

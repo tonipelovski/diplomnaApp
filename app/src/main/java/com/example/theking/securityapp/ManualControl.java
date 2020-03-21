@@ -40,7 +40,6 @@ public class ManualControl extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), ids.get(position).substring(0,5), Toast.LENGTH_LONG).show();
 
                 if (getModuleAlarmStatus(ids.get(position).substring(6)).equals("ON")) {
 
@@ -76,11 +75,6 @@ public class ManualControl extends AppCompatActivity {
 
 
     public void loadNextDataFromApi(int offset) {
-        // Send an API request to retrieve appropriate paginated data
-        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
-        //  --> Deserialize and construct new model objects from the API response
-        //  --> Append the new data objects to the existing set of items inside the array of items
-        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
         String username = getUsername();
         if (username == null || username.equals("")){
             //error
@@ -93,8 +87,6 @@ public class ManualControl extends AppCompatActivity {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            // Configure the RecyclerView
-                            //Toast.makeText(getApplicationContext(), (int) System.currentTimeMillis(), Toast.LENGTH_LONG).show();
 
                             if(!response.isEmpty()) {
                                 String[] splitedModules = response.split("/");

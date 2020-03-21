@@ -90,14 +90,7 @@ public class NotifyService extends Service {
     }
 
 
-    // Append the next page of data into the adapter
-    // This method probably sends out a network request and appends new data items to your adapter.
     public void loadNextDataFromApi(int offset) {
-        // Send an API request to retrieve appropriate paginated data
-        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
-        //  --> Deserialize and construct new model objects from the API response
-        //  --> Append the new data objects to the existing set of items inside the array of items
-        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
         String username = getUsername();
         if (username == null || username.equals("")){
             //error
@@ -110,10 +103,6 @@ public class NotifyService extends Service {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            // Configure the RecyclerView
-                            //Toast.makeText(getApplicationContext(), (int) System.currentTimeMillis(), Toast.LENGTH_LONG).show();
-
-                            //Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
                             if(!response.isEmpty()) {
                                 String[] splitedModules = response.split("/");
 
@@ -121,6 +110,9 @@ public class NotifyService extends Service {
                                     String[] splitedModuleData = splitedModules[i].split(";");
                                     Toast.makeText(getApplicationContext(), splitedModuleData[0] + getModuleAlarmStatus(splitedModuleData[0]), Toast.LENGTH_LONG).show();
 
+                                    //check the data for errors
+                                    // if errors then notify
+                                    //notificationManager.notify(1, builder.build());
                                     if(getModuleAlarmStatus(splitedModuleData[0]).equals("ON")) {
                                         if (!splitedModuleData[4].equals("0"))
                                             startForeground(1, builder.build());
@@ -134,9 +126,6 @@ public class NotifyService extends Service {
                                     }
                                 }
 
-                                //check the data for errors
-                                // if errors then notify
-                                //notificationManager.notify(1, builder.build());
 
                             }
 
